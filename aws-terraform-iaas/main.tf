@@ -32,31 +32,31 @@ module "socks-vpc" {
 
   public_subnet_tags = {
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
-    "kubernetes.io/role/elb"                  = 1
+    "kubernetes.io/role/elb"                      = 1
   }
 
   private_subnet_tags = {
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
-    "kubernetes.io/role/internal-elb"         = 1
+    "kubernetes.io/role/internal-elb"             = 1
   }
 }
 
 module "eks" {
-  source  = "terraform-aws-modules/eks/aws"
-  version = "20.8.3"
-    cluster_name = "${local.cluster_name}"
-    cluster_version = "1.25"
+  source          = "terraform-aws-modules/eks/aws"
+  version         = "20.8.3"
+  cluster_name    = local.cluster_name
+  cluster_version = "1.25"
 
-    cluster_endpoint_public_access  = true
+  cluster_endpoint_public_access = true
 
-    vpc_id = module.socks-vpc.vpc_id
-    subnet_ids = module.socks-vpc.private_subnets
+  vpc_id     = module.socks-vpc.vpc_id
+  subnet_ids = module.socks-vpc.private_subnets
 
-    tags = {
-      
-    }
+  tags = {
 
-    eks_managed_node_groups = {
+  }
+
+  eks_managed_node_groups = {
     one = {
       name = "worker-node-1"
 
